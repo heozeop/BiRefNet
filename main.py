@@ -26,17 +26,20 @@ weights_path = 'BiRefNet-DIS-epoch_590.pth'
 state_dict = torch.load(weights_path, map_location=device)
 state_dict = check_state_dict(state_dict)
 birefnet.load_state_dict(state_dict)
+
+# Convert model to float16
+birefnet = birefnet.half()
 birefnet.to(device)
 evaled_birefnet = birefnet.eval()
 
-# 더미 입력 (dynamic 으로 export 할 것이기 때문에 사이즈는 flexible)
-dummy_input = torch.randn(1, 3, 512, 512).to(device)  # 임의 shape, 중요한 건 dynamic_axes
+# Set input size to 256x256 with float16
+dummy_input = torch.randn(1, 3, 512, 512, dtype=torch.float16).to(device)
 
 # Export
 torch.onnx.export(
     evaled_birefnet,
     dummy_input,
-    "BiRefNet-DIS-dynamic.onnx",
+    "BiRefNet-DIS-epoch_590_512_float16.onnx",
     export_params=True,
     opset_version=17,  # Increased opset version for better compatibility
     do_constant_folding=True,

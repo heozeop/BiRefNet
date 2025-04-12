@@ -32,7 +32,7 @@ class Config():
         }[self.task]
 
         # Data settings
-        self.size = (1024, 1024) if self.task not in ['General-2K'] else (2560, 1440)   # wid, hei. Can be overwritten by dynamic_size in training.
+        self.size = (512, 512) if self.task not in ['General-2K'] else (2560, 1440)   # wid, hei. Can be overwritten by dynamic_size in training.
         self.dynamic_size = [None, ((512-256, 2048+256), (512-256, 2048+256))][0]    # wid, hei. It might cause errors in using compile.
         self.background_color_synthesis = False             # whether to use pure bg color to replace the original backgrounds.
 
